@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>搜索 - 弭生百科</title>
+    <style>
+      a:link { color: #2f2f7f; }
+      a:visited { color: #2437c9; }
+      a:hover { color: #ff7e7e; }
+      a:active { color: #db3529; }
+      .result-item { margin: 10px 0; }
+    </style>
+  </head>
+  <body style="font-size: 16px; line-height: 1.5; background-color: #fefefe; margin: 0; padding: 0;">
+    <div style="background-color: #fefcee; text-align: center; padding: 10px;">
+      <h3 style="margin: 6px 0;">弭生百科 · 搜索</h3>
+    </div>
+
+    <div style="max-width: 700px; margin: 10px auto; padding: 10px;">
+      <p>你搜索的是：<strong id="kw">...</strong></p>
+      <div id="results"></div>
+      <p id="empty" style="color: #888; display: none;">没有找到相关词条。以后加了词条后会自动出现在这里。</p>
+      <p><a href="index.html">← 返回首页</a></p>
+    </div>
+
+    <script>
+      // ============================================================
+      // 词条清单：以后加词条只需要照着格式加一行，例如：
+      // { title: "弭生", url: "条目-弭生.html", keywords: ["弭生", "Misheng"] },
+      // { title: "艾弭", url: "条目-艾弭.html", keywords: ["艾弭", "Aimi"] },
+      // ============================================================
+      const entries = [
+        // 在下面加词条
+      ];
+      // ============================================================
+
+      const kw = new URLSearchParams(location.search).get("q") || "";
+      document.getElementById("kw").textContent = kw;
+
+      const box = document.getElementById("results");
+      const empty = document.getElementById("empty");
+
+      if (!kw.trim()) {
+        empty.style.display = "block";
+        empty.textContent = "请在首页输入关键词后搜索。";
+      } else {
+        const hit = entries.filter(
+          (e) =>
+            e.title.includes(kw) ||
+            (e.keywords || []).some((k) => k.toLowerCase().includes(kw.toLowerCase()))
+        );
+        if (hit.length === 0) {
+          empty.style.display = "block";
+        } else {
+          hit.forEach((e) => {
+            const div = document.createElement("div");
+            div.className = "result-item";
+            div.innerHTML = '<a href="' + e.url + '">' + e.title + "</a>";
+            box.appendChild(div);
+          });
+        }
+      }
+    </script>
+  </body>
+</html>
